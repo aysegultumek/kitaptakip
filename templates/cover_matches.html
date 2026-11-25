@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Kapak seç - Kitap Takip{% endblock %}
+{% block content %}
+<a href="{{ url_for('library') }}" class="small text-decoration-none">&larr; Kitaplığa dön</a>
+<h1 class="h3 mt-2">Kitap kapağını eşleştir</h1>
+<p class="text-muted">{{ book.title }}{% if book.author %} · {{ book.author }}{% endif %}</p>
+<form class="search-nav mb-4" action="{{ url_for('find_book_covers', book_id=book.id) }}" method="get">
+  <input name="q" value="{{ query }}" class="form-control" aria-label="Kitapyurdu'nda ara">
+  <button class="btn" type="submit"><i class="bi bi-search"></i> Ara</button>
+</form>
+{% if message %}<div class="alert alert-warning">{{ message }}</div>{% endif %}
+<div class="search-grid">
+  {% for result in results %}
+  <article class="book-card card">
+    <img class="book-cover" src="{{ result.cover_url or url_for('static', filename='default-cover.svg') }}" alt="{{ result.title }}">
+    <div class="card-body">
+      <h2 class="h6">{{ result.title }}</h2>
+      <p class="text-muted small">{{ result.author or 'Yazar belirtilmemiş' }}</p>
+      <p class="small">{{ result.publisher }}</p>
+      <form method="post" action="{{ url_for('set_book_cover', book_id=book.id) }}">
+        <input type="hidden" name="cover_url" value="{{ result.cover_url }}">
+        <button class="btn btn-primary w-100" type="submit" {% if not result.cover_url %}disabled{% endif %}>
+          Bu kapağı eşleştir
+        </button>
+      </form>
+    </div>
+  </article>
+  {% endfor %}
+</div>
+{% endblock %}

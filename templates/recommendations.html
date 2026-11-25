@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Kitap önerileri - Kitap Takip{% endblock %}
+{% block content %}
+<h1 class="h3 mb-2">Sana göre kitaplar</h1>
+<p class="text-muted mb-4">Okuduğun kitaplar ve 4-5 yıldız verdiğin favoriler baz alınarak Kitapyurdu'nda aranır.</p>
+{% if message %}<div class="alert alert-info">{{ message }}</div>{% endif %}
+<div class="search-grid">
+  {% for book in results %}
+  <article class="book-card card">
+    <img class="book-cover" src="{{ book.cover_url or url_for('static', filename='default-cover.svg') }}" alt="{{ book.title }}">
+    <div class="card-body">
+      <h2 class="h6">{{ book.title }}</h2>
+      <p class="text-muted small">{{ book.author or 'Yazar belirtilmemiş' }}</p>
+      <p class="small">{{ book.reason }}</p>
+      <form method="post" action="{{ url_for('add_book') }}">
+        <input type="hidden" name="title" value="{{ book.title }}">
+        <input type="hidden" name="author" value="{{ book.author }}">
+        <input type="hidden" name="publisher" value="{{ book.publisher }}">
+        <input type="hidden" name="cover_url" value="{{ book.cover_url }}">
+        <input type="hidden" name="product_url" value="{{ book.url }}">
+        <button class="btn btn-primary w-100" name="status" value="okunacak">Okunacak rafına ekle</button>
+      </form>
+    </div>
+  </article>
+  {% endfor %}
+</div>
+{% endblock %}

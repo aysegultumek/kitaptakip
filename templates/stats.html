@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}İstatistik - Kitap Takip{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">İstatistik</h1>
+<div class="row g-3 mb-4">
+  <div class="col-md-4"><div class="stat-card card"><div class="card-body"><div class="stat-value">{{ finished_count }}/{{ annual_target }}</div><div>{{ status_text }}</div></div></div></div>
+  <div class="col-md-4"><div class="stat-card card"><div class="card-body"><div class="stat-value">{{ streak }}</div><div>Gün okuma serisi</div></div></div></div>
+</div>
+<div class="card"><div class="card-body"><h2 class="h5">Aylık okunan kitap</h2><canvas id="monthlyChart"></canvas></div></div>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+new Chart(document.getElementById('monthlyChart'), {
+  type: 'bar',
+  data: {
+    labels: {{ ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara']|tojson }},
+    datasets: [{label:'Okunan kitap', data: {{ monthly|tojson }}, backgroundColor:'#EC691F'}]
+  },
+  options: {responsive:true, scales:{y:{beginAtZero:true, ticks:{precision:0}}}}
+});
+</script>
+{% endblock %}
